@@ -29,7 +29,7 @@ import com.himanshu.journalApp.service.UserService;
 
 @RestController
 @RequestMapping("/journal")
-public class JournalEntryControllerV2 {
+public class JournalEntryController {
 	
 	@Autowired
 	private JournalEntryService journalEntryService;
