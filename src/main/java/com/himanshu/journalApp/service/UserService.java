@@ -1,10 +1,13 @@
 package com.himanshu.journalApp.service;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import com.himanshu.journalApp.entity.User;
@@ -16,7 +19,19 @@ public class UserService {
 	@Autowired
 	private UserRepository userRepository;
 	
-	public void saveEntry(User journalEntry) {
+	private static final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+	
+	public void saveEntry(User user) {
+		try {
+			user.setPassword(passwordEncoder.encode(user.getPassword()));
+			user.setRoles(Arrays.asList("USER"));
+			userRepository.save(user);
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public void saveNewUser(User journalEntry) {
 		try {
 			userRepository.save(journalEntry);
 		}catch(Exception e) {
