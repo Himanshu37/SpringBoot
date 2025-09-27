@@ -25,7 +25,7 @@ public class PublicController {
 	@PostMapping("/create-user")
 	public void createUser(@RequestBody User user) {
 		System.out.println("POST /user called with: " + user);
-		userService.saveEntry(user);
+		userService.saveNewUser(user);
 	}
 
 }
