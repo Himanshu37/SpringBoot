@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.Optional;
 
 import org.bson.types.ObjectId;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -13,7 +15,10 @@ import org.springframework.stereotype.Component;
 import com.himanshu.journalApp.entity.User;
 import com.himanshu.journalApp.repository.UserRepository;
 
+import lombok.extern.slf4j.Slf4j;
+
 @Component
+@Slf4j
 public class UserService {
 	
 	@Autowired
@@ -21,13 +26,23 @@ public class UserService {
 	
 	private static final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 	
-	public void saveNewUser(User user) {
+//	private static final Logger logger = LoggerFactory.getLogger(UserService.class);
+	
+	public boolean saveNewUser(User user) {
 		try {
+//			logger.info("Entered to save user");
 			user.setPassword(passwordEncoder.encode(user.getPassword()));
 			user.setRoles(Arrays.asList("USER"));
 			userRepository.save(user);
+			return true;
 		}catch(Exception e) {
-			e.printStackTrace();
+//			logger.error("Error occured for {} ", user.getUserName() , e);
+			log.error("Error occured for {} ", user.getUserName() , e);
+//			logger.error("hahahah!!!!!");
+//			logger.warn("hahahah!!!!!");
+//			logger.debug("hahahah!!!!!");
+//			logger.trace("hahahah!!!!!");
+			return false;
 		}
 	}
 	
