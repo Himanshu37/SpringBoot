@@ -19,6 +19,9 @@ import org.springframework.web.bind.annotation.RestController;
 import com.himanshu.journalApp.entity.User;
 import com.himanshu.journalApp.repository.UserRepository;
 import com.himanshu.journalApp.service.UserService;
+import com.himanshu.journalApp.service.WeatherService;
+
+import api.response.WeatherResponse;
 
 
 @RestController
@@ -30,6 +33,9 @@ public class UserController {
 	
 	@Autowired
 	private UserRepository userRepository;
+	
+	@Autowired
+	private WeatherService weatherService;
 	
 	@PutMapping
 	public ResponseEntity<?> updateUser(@RequestBody User user) {
@@ -47,6 +53,17 @@ public class UserController {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		userRepository.deleteByUserName(authentication.getName());
 		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+	}
+	
+	@GetMapping
+	public ResponseEntity<?> greeting() {
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		WeatherResponse weatherResponse = weatherService.getWeather("Delhi");
+		String greeting = "";
+		if(weatherResponse != null) {
+			greeting = ", Weather feels like " + weatherResponse.getCurrent().getFeelslike();
+		}
+		return new ResponseEntity<>("Hi " + authentication.getName() + greeting,HttpStatus.OK);
 	}
 	
 }
